@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+jinja2
+pydantic[email]
+google-generativeai
+python-dotenv
+flask
+gunicorn

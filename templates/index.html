@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Smart Practice — Practice, Mock Tests & Analytics</title>
+    <meta name="description"
+        content="Smart JEE exam preparation with practice questions, mock tests, analytics, topic insights, and AI chatbot.">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- MathJax for LaTeX rendering -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe',
+                            300: '#c4b5fd', 400: '#a78bfa', 500: '#8b5cf6',
+                            600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.35s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c4b5fd;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+
+        /* Smooth page transitions */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.35s ease-out;
+        }
+
+        /* Chat messages */
+        .chat-bubble-user {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: white;
+            border-radius: 1rem 1rem 0.25rem 1rem;
+        }
+
+        .chat-bubble-bot {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-radius: 1rem 1rem 1rem 0.25rem;
+        }
+
+        /* Progress bar fill animation */
+        .progress-fill {
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Timer pulse */
+        .timer-warning {
+            animation: pulse 1s ease-in-out infinite;
+            color: #ef4444;
+        }
+
+        /* Nav active indicator */
+        .nav-link.active {
+            color: #7c3aed;
+            border-bottom: 2px solid #7c3aed;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- NAVBAR -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <nav class="bg-white/90 backdrop-blur-xl shadow-sm border-b border-slate-200/60 sticky top-0 z-50 w-full transition-all duration-300 hover:bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Brand -->
+                <div class="flex items-center space-x-3 flex-shrink-0">
+                    <div
+                        class="bg-gradient-to-br from-brand-500 to-brand-700 p-2 rounded-xl text-white shadow-md shadow-brand-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-extrabold text-slate-900 tracking-tight hidden sm:inline">JEE Smart
+                        Practice</span>
+                </div>
+                <!-- Nav Links -->
+                <div class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
+                    <a href="/dashboard"
+                        class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">Dashboard</a>
+                    <button onclick="navigateTo('practice')" id="nav-practice"
+                        class="nav-link active px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">
+                        Practice
+                    </button>
+                    <button onclick="navigateTo('mocktest')" id="nav-mocktest"
+                        class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">
+                        Mock Test
+                    </button>
+                    <button onclick="navigateTo('topics')" id="nav-topics"
+                        class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">
+                        Topics
+                    </button>
+                    <button onclick="navigateTo('chatbot')" id="nav-chatbot"
+                        class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">
+                        Chatbot
+                    </button>
+                    <div class="border-l border-slate-200/80 pl-2 sm:pl-3 ml-1 sm:ml-2 flex items-center space-x-2">
+                        <button onclick="navigateTo('profile')" id="nav-profile"
+                            class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">Profile</button>
+                        <button onclick="logout()"
+                            class="text-sm font-semibold text-rose-500 hover:text-rose-600 px-2 py-1.5 rounded-lg transition-colors whitespace-nowrap">Log
+                            Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8 sm:py-10">
+
+        <!-- ─────────────── PRACTICE SECTION ─────────────── -->
+        <section id="section-practice" class="page-section active">
+            
+            <!-- Session Progress Indicator -->
+            <div id="practice-progress-container" class="hidden mb-6 bg-white rounded-2xl p-4 sm:px-6 sm:py-4 shadow-sm border border-slate-200 flex justify-between items-center animate-fade-in">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-brand-100 text-brand-600 p-2 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Practice Session</p>
+                        <p class="text-sm font-bold text-slate-800">Questions Attempted: <span id="session-count" class="text-brand-600">0</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading-spinner" class="flex flex-col justify-center items-center py-20 space-y-4">
+                <div class="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-brand-600 shadow-sm"></div>
+                <p class="text-slate-500 font-medium animate-pulse">Loading question...</p>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card"
+                class="w-full bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden hidden animate-fade-in flex-col transition-all duration-300">
+                <!-- Card Header -->
+                <div
+                    class="px-6 sm:px-8 py-4 border-b border-slate-100 bg-slate-50/50 flex flex-wrap justify-between items-center gap-3">
+                    <div class="flex items-center space-x-3">
+                        <span id="subject-badge"
+                            class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-slate-100 text-slate-600 uppercase tracking-widest shadow-sm border border-slate-200/60">Subject</span>
+                        <span id="question-id-badge" class="text-xs text-slate-400 font-medium font-mono">ID:
+                            Q---</span>
+                    </div>
+                </div>
+                <!-- Card Body -->
+                <div class="p-6 sm:p-8 flex-grow">
+                    <div class="mb-8">
+                        <p id="question-text"
+                            class="text-lg sm:text-xl text-slate-900 leading-relaxed font-medium whitespace-pre-wrap">
+                        </p>
+                        <div id="graph-container" class="mt-4 hidden">
+                            <h3 class="text-sm font-semibold text-slate-500 mb-2">Graph view</h3>
+                            <div class="bg-white rounded-xl border border-slate-200 p-3">
+                                <canvas id="equation-graph" height="220"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="options-form" class="space-y-3 hidden animate-slide-up"
+                        onsubmit="event.preventDefault();"></form>
+                    <form id="numerical-form" class="hidden animate-slide-up max-w-sm"
+                        onsubmit="event.preventDefault(); submitAnswer();">
+                        <label for="numerical-input" class="block text-sm font-medium text-slate-700 mb-2">Your
+                            Answer:</label>
+                        <input type="text" id="numerical-input" placeholder="Type answer..."
+                            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all shadow-sm text-slate-900 text-lg outline-none">
+                    </form>
+                </div>
+                <!-- Card Footer -->
+                <div
+                    class="p-6 sm:px-8 sm:py-6 bg-slate-50/80 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div id="feedback-container"
+                        class="w-full sm:w-auto flex-grow items-center hidden transition-all duration-300">
+                        <div id="feedback-alert" class="w-full flex items-start sm:items-center p-4 rounded-xl border">
+                            <div id="feedback-icon" class="flex-shrink-0 mr-3"></div>
+                            <div class="flex-1">
+                                <h3 id="feedback-title" class="text-sm sm:text-base font-bold"></h3>
+                                <p id="feedback-message" class="text-sm mt-0.5"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="action-spacer" class="flex-grow hidden sm:block"></div>
+                    <div class="w-full sm:w-auto flex-shrink-0 flex gap-3">
+                        <button id="submit-btn" type="button" onclick="submitAnswer()"
+                            class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-8 rounded-xl shadow-md shadow-brand-200 transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 active:scale-95 flex justify-center items-center group">
+                            <span>Submit Answer</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                        <button id="next-btn" type="button" onclick="loadNextQuestion()"
+                            class="w-full sm:w-auto bg-white hover:bg-slate-50 text-slate-700 font-semibold py-3 px-8 border border-slate-300 rounded-xl shadow-sm transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 active:scale-95 flex justify-center items-center hidden group">
+                            <span>Next Question</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 ml-2 text-slate-400 group-hover:text-slate-600 transition-colors group-hover:translate-x-1"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─────────────── MOCK TEST SECTION ─────────────── -->
+        <section id="section-mocktest" class="page-section">
+            <!-- Start Screen -->
+            <div id="mock-start" class="text-center py-16 animate-fade-in">
+                <div
+                    class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-200 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-900 mb-3">Mock Test</h2>
+                <p class="text-slate-500 max-w-md mx-auto mb-6">
+                    Configure your mock test by choosing subjects and questions per subject, or run the default 90-question test.
+                </p>
+                <div class="max-w-md mx-auto mb-6 bg-white rounded-2xl shadow-sm border border-slate-200 p-4 text-left">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Configuration</p>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-xs font-medium text-slate-500 mb-1">Subjects</p>
+                            <div class="flex flex-wrap gap-3">
+                                <label class="inline-flex items-center space-x-2 text-sm text-slate-700">
+                                    <input id="mock-subject-physics" type="checkbox" class="rounded text-brand-600">
+                                    <span>Physics</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-2 text-sm text-slate-700">
+                                    <input id="mock-subject-chemistry" type="checkbox" class="rounded text-brand-600">
+                                    <span>Chemistry</span>
+                                </label>
+                                <label class="inline-flex items-center space-x-2 text-sm text-slate-700">
+                                    <input id="mock-subject-maths" type="checkbox" class="rounded text-brand-600">
+                                    <span>Maths</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="mock-questions-per-subject" class="block text-xs font-medium text-slate-500 mb-1">
+                                Questions per selected subject
+                            </label>
+                            <input id="mock-questions-per-subject" type="number" min="5" max="90" value="30"
+                                class="w-32 px-3 py-1.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                            <p class="text-[11px] text-slate-400 mt-1">
+                                Leave subjects unchecked to use the default 30 questions per subject (total 90).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="startMockTest()" id="start-mock-btn"
+                    class="bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-bold py-4 px-10 rounded-2xl shadow-lg shadow-brand-200 transition-all duration-200 active:scale-95 text-lg">
+                    Start Mock Test
+                </button>
+            </div>
+
+            <!-- Test In Progress -->
+            <div id="mock-test-area" class="hidden animate-fade-in">
+                <!-- Timer & Progress Bar -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 mb-6 sticky top-20 z-30">
+                    <div class="flex flex-wrap justify-between items-center gap-4">
+                        <div class="flex items-center space-x-4">
+                            <span id="mock-timer"
+                                class="text-2xl font-extrabold font-mono text-slate-900">03:00:00</span>
+                            <span class="text-xs text-slate-400 uppercase tracking-widest font-semibold">Time
+                                Left</span>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span id="mock-progress-text" class="text-sm font-semibold text-slate-500">0 / 90
+                                answered</span>
+                            <button onclick="submitMockTest()" id="submit-mock-btn"
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 px-6 rounded-xl shadow-sm transition-all active:scale-95">
+                                Submit Test
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-3 w-full bg-slate-100 rounded-full h-2">
+                        <div id="mock-progress-bar"
+                            class="progress-fill bg-gradient-to-r from-brand-500 to-brand-600 h-2 rounded-full"
+                            style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Questions List -->
+                <div id="mock-questions-container" class="space-y-6">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Results Dashboard -->
+            <div id="mock-results" class="hidden animate-fade-in space-y-8">
+                <!-- Top cards (score, total accuracy, etc.) will be injected here -->
+                <div id="mock-results-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Chart Column -->
+                    <div
+                        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center justify-center">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 w-full text-left">Subject Performance</h3>
+                        <div class="w-full relative h-[250px] sm:h-[300px]">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Remarks & Insights Column -->
+                    <div
+                        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 id="overall-remark-title" class="text-xl font-bold text-brand-700 mb-4">Performance
+                                Insights</h3>
+                            <ul id="insights-list" class="space-y-3 mb-6">
+                                <!-- Insight list items injected here -->
+                            </ul>
+                            <div id="weak-areas-container">
+                                <!-- Weak areas injected here -->
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <button onclick="retakeMockTest()"
+                                class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-6 rounded-xl shadow-sm transition-all active:scale-95">
+                                Take Another Test
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─────────────── IMPORTANT TOPICS SECTION ─────────────── -->
+        <section id="section-topics" class="page-section">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-slate-900 mb-3">Important Topics</h2>
+                <p class="text-slate-500 max-w-lg mx-auto">Most frequently tested topics across JEE Main papers, powered
+                    by analysis of 5700+ questions.</p>
+            </div>
+            <div id="topics-loading" class="flex justify-center py-16">
+                <div class="animate-spin rounded-full h-10 w-10 border-4 border-slate-200 border-t-brand-600"></div>
+            </div>
+            <div id="topics-container" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- ─────────────── CHATBOT SECTION ─────────────── -->
+        <section id="section-chatbot" class="page-section">
+            <div class="max-w-2xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-extrabold text-slate-900 mb-3">Study Assistant</h2>
+                    <p class="text-slate-500">Choose a subject and ask doubts for Physics, Chemistry or Maths.</p>
+                </div>
+                <!-- Chat Window -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col"
+                    style="height: 520px;">
+                    <div class="border-b border-slate-200 bg-slate-50/70 px-4 py-3 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Subject</span>
+                        <div class="inline-flex rounded-xl bg-white shadow-sm border border-slate-200 overflow-hidden">
+                            <button id="chat-subject-physics" type="button"
+                                class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-brand-50 border-r border-slate-200">
+                                Physics
+                            </button>
+                            <button id="chat-subject-chemistry" type="button"
+                                class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 border-r border-slate-200">
+                                Chemistry
+                            </button>
+                            <button id="chat-subject-maths" type="button"
+                                class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50">
+                                Maths
+                            </button>
+                        </div>
+                    </div>
+                    <div id="chat-messages" class="flex-grow overflow-y-auto p-6 space-y-4">
+                        <!-- Welcome message -->
+                        <div class="flex items-start space-x-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                </svg>
+                            </div>
+                            <div class="chat-bubble-bot px-4 py-3 max-w-sm shadow-sm">
+                                <p class="text-sm leading-relaxed">
+                                    Hi! Select <strong>Physics</strong>, <strong>Chemistry</strong> or
+                                    <strong>Maths</strong> above and ask your question. I'll answer with
+                                    subject-specific guidance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chat Input -->
+                    <div class="border-t border-slate-200 p-4 bg-slate-50/50">
+                        <form onsubmit="event.preventDefault(); sendChatMessage();" class="flex space-x-3">
+                            <input type="text" id="chat-input" placeholder="Ask about JEE topics, study tips..."
+                                class="flex-grow px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all text-sm outline-none"
+                                autocomplete="off">
+                            <button type="submit" id="chat-send-btn"
+                                class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-5 py-3 rounded-xl shadow-sm transition-all active:scale-95 flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─────────────── PROFILE SECTION ─────────────── -->
+        <section id="section-profile" class="page-section">
+            <div class="max-w-2xl mx-auto">
+                <div
+                    class="bg-white rounded-3xl shadow-sm border border-slate-200 p-10 text-center mb-8 relative overflow-hidden">
+                    <div class="absolute top-0 inset-x-0 h-32 bg-gradient-to-r from-brand-500 to-indigo-600"></div>
+                    <div class="w-28 h-28 mx-auto bg-white p-1 rounded-full relative z-10 shadow-lg mb-5 mt-8"
+                        id="profile-avatar-border">
+                        <div class="w-full h-full bg-slate-100 rounded-full flex items-center justify-center text-slate-700 text-4xl font-extrabold uppercase"
+                            id="profile-avatar">
+                            ?
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 relative z-10" id="profile-name">Loading...</h2>
+                    <p class="text-slate-500 font-medium mt-1 mb-8 relative z-10" id="profile-email">---</p>
+
+                    <div class="grid grid-cols-2 gap-4 border-t border-slate-100 pt-8" id="profile-stats">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <p class="text-sm font-semibold text-slate-500 mb-1">Total Attempted</p>
+                            <p class="text-2xl font-extrabold text-slate-900" id="profile-total-attempted">-</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <p class="text-sm font-semibold text-slate-500 mb-1">Overall Accuracy</p>
+                            <p class="text-2xl font-extrabold text-brand-600" id="profile-overall-accuracy">-%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+        JEE Smart Practice &mdash; Built for aspiring engineers 🚀
+    </footer>
+
+
+
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

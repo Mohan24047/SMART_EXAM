@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Smart Practice — Ace Your JEE Exam</title>
+    <meta name="description"
+        content="Smart JEE exam preparation platform with practice questions, mock tests, analytics dashboard, and AI-powered study assistant.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe',
+                            300: '#c4b5fd', 400: '#a78bfa', 500: '#8b5cf6',
+                            600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'slide-up': 'slideUp 0.7s ease-out',
+                        'slide-up-delay': 'slideUp 0.7s ease-out 0.15s both',
+                        'slide-up-delay2': 'slideUp 0.7s ease-out 0.3s both',
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delay': 'float 6s ease-in-out 2s infinite',
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
+                        pulseGlow: { '0%, 100%': { boxShadow: '0 0 20px rgba(139,92,246,0.15)' }, '50%': { boxShadow: '0 0 40px rgba(139,92,246,0.3)' } },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #7c3aed, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-bg {
+            background: radial-gradient(ellipse at 30% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 100%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgba(139, 92, 246, 0.15);
+        }
+
+        .feature-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen antialiased">
+
+    <!-- ═══ NAVBAR ═══ -->
+    <nav class="bg-white/80 backdrop-blur-lg shadow-sm border-b border-slate-200/60 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="bg-gradient-to-br from-brand-500 to-brand-700 p-2 rounded-xl text-white shadow-md shadow-brand-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-extrabold text-slate-900 tracking-tight">JEE Smart Practice</span>
+                </div>
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <a href="/"
+                        class="px-3 py-2 text-sm font-semibold text-brand-600 border-b-2 border-brand-600 transition-colors">Home</a>
+                    <a href="/login"
+                        class="px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors">Login</a>
+                    <a href="/signup-page"
+                        class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-sm transition-all active:scale-95">Sign
+                        Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══ HERO SECTION ═══ -->
+    <section class="hero-bg relative overflow-hidden">
+        <!-- Decorative orbs -->
+        <div
+            class="absolute top-20 left-10 w-72 h-72 bg-brand-400/10 rounded-full blur-3xl animate-float pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-10 right-10 w-96 h-96 bg-blue-400/8 rounded-full blur-3xl animate-float-delay pointer-events-none">
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36 relative z-10">
+            <div class="text-center max-w-4xl mx-auto">
+                <div
+                    class="inline-flex items-center px-4 py-1.5 rounded-full bg-brand-100/80 text-brand-700 text-sm font-semibold mb-8 animate-fade-in border border-brand-200/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    5700+ JEE Questions • AI-Powered Analytics
+                </div>
+
+                <h1
+                    class="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight mb-6 animate-slide-up leading-tight">
+                    Ace Your <span class="gradient-text">JEE Exam</span><br>
+                    with Smart Practice
+                </h1>
+
+                <p
+                    class="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 animate-slide-up-delay leading-relaxed">
+                    Practice with real JEE Main questions, take timed mock tests, track your performance with detailed
+                    analytics, and get AI-powered study guidance — all in one platform.
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4 animate-slide-up-delay2">
+                    <a href="/signup-page"
+                        class="bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-bold py-4 px-10 rounded-2xl shadow-lg shadow-brand-200 transition-all duration-200 active:scale-95 text-lg animate-pulse-glow">
+                        Start Learning Free →
+                    </a>
+                    <a href="/login"
+                        class="bg-white hover:bg-slate-50 text-slate-700 font-bold py-4 px-10 rounded-2xl shadow-sm border border-slate-200 transition-all duration-200 active:scale-95 text-lg">
+                        Log In
+                    </a>
+                </div>
+
+                <!-- Stats strip -->
+                <div class="mt-16 grid grid-cols-3 gap-6 max-w-lg mx-auto text-center animate-slide-up-delay2">
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-slate-900">5700+</p>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium">Questions</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-slate-900">90</p>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium">Questions/Test</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-slate-900">3</p>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium">Subjects</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FEATURES SECTION ═══ -->
+    <section class="py-20 sm:py-28 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">Everything You Need to Crack JEE
+                </h2>
+                <p class="text-slate-500 max-w-xl mx-auto text-lg">A complete exam preparation toolkit designed to
+                    maximize your score.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Practice -->
+                <div class="feature-card glass-card rounded-2xl p-7 border border-slate-200/60">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white mb-5 shadow-lg shadow-blue-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Smart Practice</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Practice with real JEE Main questions from
+                        2020–2024.
+                        Instant feedback on every answer.</p>
+                </div>
+
+                <!-- Mock Tests -->
+                <div class="feature-card glass-card rounded-2xl p-7 border border-slate-200/60">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white mb-5 shadow-lg shadow-emerald-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Full Mock Tests</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">90-question timed tests — 30 Physics, 30
+                        Chemistry, 30
+                        Maths. Scored with detailed analysis.</p>
+                </div>
+
+                <!-- Analytics -->
+                <div class="feature-card glass-card rounded-2xl p-7 border border-slate-200/60">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-brand-500 to-brand-600 rounded-2xl flex items-center justify-center text-white mb-5 shadow-lg shadow-brand-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Analytics Dashboard</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Track accuracy, identify weak topics, and monitor
+                        progress across Physics, Chemistry, and Maths.</p>
+                </div>
+
+                <!-- AI Chatbot -->
+                <div class="feature-card glass-card rounded-2xl p-7 border border-slate-200/60">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center text-white mb-5 shadow-lg shadow-amber-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">AI Study Assistant</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Get instant study tips, topic recommendations,
+                        and
+                        motivational support from our AI chatbot.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ WHY US SECTION ═══ -->
+    <section class="py-20 sm:py-24 hero-bg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-6 leading-tight">Why Students
+                        Choose<br><span class="gradient-text">JEE Smart Practice</span></h2>
+                    <div class="space-y-5">
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-600" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-1">Real JEE Questions</h4>
+                                <p class="text-sm text-slate-500">Practice with actual JEE Main questions from 2020 to
+                                    2024 — no synthetic or low-quality content.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-1">Personalized Insights</h4>
+                                <p class="text-sm text-slate-500">Get subject-wise accuracy breakdowns, weak topic
+                                    detection, and actionable study recommendations.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-10 h-10 bg-brand-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-600" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-1">Exam-Like Mock Tests</h4>
+                                <p class="text-sm text-slate-500">3-hour timed mock tests with 90 questions,
+                                    subject-wise scoring, and performance comparison.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-1">100% Free</h4>
+                                <p class="text-sm text-slate-500">All features are completely free. No hidden charges,
+                                    no premium locks — just learning.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual card -->
+                <div class="flex justify-center">
+                    <div
+                        class="w-full max-w-sm bg-white rounded-3xl shadow-2xl shadow-brand-100/50 border border-slate-200/60 p-8 relative overflow-hidden">
+                        <div
+                            class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-brand-500 via-blue-500 to-emerald-500">
+                        </div>
+                        <div class="text-center mb-6">
+                            <div
+                                class="w-16 h-16 mx-auto bg-gradient-to-br from-brand-500 to-brand-700 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-brand-200 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900">Your Performance</h3>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-slate-600">Physics</span>
+                                <div class="flex-1 mx-4 bg-slate-100 rounded-full h-2.5">
+                                    <div class="bg-blue-500 h-2.5 rounded-full" style="width: 72%"></div>
+                                </div>
+                                <span class="text-sm font-bold text-slate-900">72%</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-slate-600">Chemistry</span>
+                                <div class="flex-1 mx-4 bg-slate-100 rounded-full h-2.5">
+                                    <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 85%"></div>
+                                </div>
+                                <span class="text-sm font-bold text-slate-900">85%</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-slate-600">Maths</span>
+                                <div class="flex-1 mx-4 bg-slate-100 rounded-full h-2.5">
+                                    <div class="bg-rose-500 h-2.5 rounded-full" style="width: 63%"></div>
+                                </div>
+                                <span class="text-sm font-bold text-slate-900">63%</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-5 border-t border-slate-100 text-center">
+                            <p class="text-xs text-slate-400 font-medium">Sample analytics dashboard preview</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ CTA SECTION ═══ -->
+    <section
+        class="py-20 sm:py-24 bg-gradient-to-br from-brand-600 via-brand-700 to-indigo-800 relative overflow-hidden">
+        <div
+            class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA2MCAwIEwgMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-40">
+        </div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Ready to Start Your JEE Journey?</h2>
+            <p class="text-brand-200 text-lg mb-10 max-w-xl mx-auto">Join thousands of students who are preparing
+                smarter, not harder. Create your free account and start practicing today.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="/signup-page"
+                    class="bg-white hover:bg-slate-50 text-brand-700 font-bold py-4 px-10 rounded-2xl shadow-lg transition-all duration-200 active:scale-95 text-lg">
+                    Create Free Account
+                </a>
+                <a href="/login"
+                    class="bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-10 rounded-2xl border border-white/20 transition-all duration-200 active:scale-95 text-lg backdrop-blur-sm">
+                    Log In
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="bg-slate-900 text-slate-400 py-10">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="flex items-center justify-center space-x-3 mb-4">
+                <div class="bg-brand-600 p-2 rounded-xl text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <span class="text-white font-bold text-lg">JEE Smart Practice</span>
+            </div>
+            <p class="text-sm">Built for aspiring engineers 🚀 — Powered by 5700+ real JEE Main questions.</p>
+            <p class="text-xs mt-3 text-slate-500">&copy; 2026 JEE Smart Practice. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

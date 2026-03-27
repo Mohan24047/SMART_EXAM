@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — JEE Smart Practice</title>
+    <meta name="description"
+        content="Your JEE preparation dashboard — track performance, accuracy, and mock test scores.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe',
+                            300: '#c4b5fd', 400: '#a78bfa', 500: '#8b5cf6',
+                            600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s ease-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c4b5fd;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+
+        .nav-link.active {
+            color: #7c3aed;
+            border-bottom: 2px solid #7c3aed;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- ═══ NAVBAR ═══ -->
+    <nav class="bg-white/90 backdrop-blur-xl shadow-sm border-b border-slate-200/60 sticky top-0 z-50 w-full transition-all duration-300 hover:bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="/dashboard" class="flex items-center space-x-3 flex-shrink-0">
+                    <div
+                        class="bg-gradient-to-br from-brand-500 to-brand-700 p-2 rounded-xl text-white shadow-md shadow-brand-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-extrabold text-slate-900 tracking-tight hidden sm:inline">JEE Smart
+                        Practice</span>
+                </a>
+                <div class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
+                    <a href="/dashboard"
+                        class="nav-link active px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">Dashboard</a>
+                    <a href="/app#practice"
+                        class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">Practice</a>
+                    <a href="/app#mocktest"
+                        class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">Mock
+                        Test</a>
+                    <a href="/app#topics"
+                        class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">Topics</a>
+                    <a href="/app#chatbot"
+                        class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">Chatbot</a>
+                    <div class="border-l border-slate-200 pl-2 sm:pl-3 ml-1 sm:ml-2 flex items-center space-x-2">
+                        <a href="/app#profile"
+                            class="nav-link px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 transition-colors rounded-lg whitespace-nowrap">Profile</a>
+                        <button onclick="logout()"
+                            class="text-sm font-semibold text-rose-500 hover:text-rose-600 px-2 py-1.5 rounded-lg transition-colors whitespace-nowrap">Log
+                            Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="flex-grow w-full max-w-4xl mx-auto px-4 py-8 sm:py-10">
+
+        <!-- Loading -->
+        <div id="dashboard-loading" class="flex flex-col justify-center items-center py-20 space-y-4">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-brand-600"></div>
+            <p class="text-slate-500 font-medium animate-pulse">Loading your dashboard...</p>
+        </div>
+
+        <!-- Dashboard Content (hidden until loaded) -->
+        <div id="dashboard-content" class="hidden animate-fade-in space-y-8">
+
+            <!-- Welcome Header -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-slate-900" id="welcome-msg">Welcome back!</h1>
+                    <p class="text-slate-500 mt-1 font-medium">Here's your preparation overview.</p>
+                </div>
+                <a href="/app#practice"
+                    class="bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-6 rounded-xl shadow-sm transition-all active:scale-95 flex items-center space-x-2">
+                    <span>Start Practicing</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Performance Overview Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="stats-cards">
+                <!-- Injected by JS -->
+            </div>
+
+            <!-- Subject Performance + Mock Test History -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Subject Accuracy Chart -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4">Subject Performance</h3>
+                    <div class="w-full relative h-[280px]">
+                        <canvas id="subjectChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Mock Test History Chart -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4">Mock Test History</h3>
+                    <div class="w-full relative h-[280px]">
+                        <canvas id="historyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- AI Insights -->
+                <div
+                    class="bg-gradient-to-br from-brand-50 to-indigo-50 rounded-2xl shadow-sm border border-brand-200/50 p-6">
+                    <h3 class="text-lg font-bold text-brand-800 mb-4 flex items-center">
+                        <span class="bg-brand-100 rounded-lg p-1.5 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </span>
+                        Performance Insights
+                    </h3>
+                    <div id="insights-container" class="space-y-3">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Weak Chapters -->
+                <div
+                    class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl shadow-sm border border-amber-200/50 p-6">
+                    <h3 class="text-lg font-bold text-amber-800 mb-4 flex items-center">
+                        <span class="bg-amber-100/50 rounded-lg p-1.5 mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </span>
+                        Topics to Improve
+                    </h3>
+                    <p class="text-xs text-amber-700/80 mb-4">Based on your cumulative practice mistakes.</p>
+                    <div id="weak-topics-container" class="space-y-2">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+        JEE Smart Practice &mdash; Built for aspiring engineers 🚀
+    </footer>
+
+    <script>
+        // ═══ AUTH CHECK ═══
+        const token = localStorage.getItem('smart_exam_token');
+        const userStr = localStorage.getItem('smart_exam_user');
+
+        if (!token) {
+            window.location.href = '/login';
+        }
+
+        let currentUser = null;
+        try { currentUser = JSON.parse(userStr); } catch (e) { }
+
+        // Set welcome message
+        if (currentUser && currentUser.name) {
+            document.getElementById('welcome-msg').textContent = `Welcome back, ${currentUser.name}!`;
+        }
+
+        // ═══ LOGOUT ═══
+        function logout() {
+            if (token) {
+                fetch('/logout', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).catch(e => console.error(e));
+            }
+            localStorage.removeItem('smart_exam_token');
+            localStorage.removeItem('smart_exam_user');
+            window.location.href = '/';
+        }
+
+        // ═══ LOAD DASHBOARD DATA ═══
+        let subjectChartInstance = null;
+        let historyChartInstance = null;
+
+        async function loadDashboard() {
+            const loading = document.getElementById('dashboard-loading');
+            const content = document.getElementById('dashboard-content');
+
+            try {
+                const response = await fetch('/api/dashboard', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.status === 401) {
+                    localStorage.removeItem('smart_exam_token');
+                    localStorage.removeItem('smart_exam_user');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                if (!response.ok) throw new Error('Failed to load dashboard data');
+                const data = await response.json();
+
+                // ── Stats Cards ──
+                const mockCount = data.mock_test_count || data.recent_mock_tests.length;
+                document.getElementById('stats-cards').innerHTML = `
+                    <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-center items-center text-center">
+                        <p class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Questions Attempted</p>
+                        <p class="text-3xl font-extrabold text-slate-900">${data.total_attempts}</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-center items-center text-center">
+                        <p class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Overall Accuracy</p>
+                        <p class="text-3xl font-extrabold text-brand-600">${Math.round(data.overall_accuracy * 100)}%</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-center items-center text-center">
+                        <p class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Mock Tests Taken</p>
+                        <p class="text-3xl font-extrabold text-slate-900">${mockCount}</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-center items-center text-center">
+                        <p class="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wide">Latest Score</p>
+                        <p class="text-3xl font-extrabold ${data.recent_mock_tests.length > 0 ? 'text-emerald-600' : 'text-slate-400'}">${data.recent_mock_tests.length > 0 ? data.recent_mock_tests[0].score : '--'}</p>
+                    </div>
+                `;
+
+                // ── Subject Accuracy Chart ──
+                const physAcc = Math.round((data.subject_accuracy.physics || 0) * 100);
+                const chemAcc = Math.round((data.subject_accuracy.chemistry || 0) * 100);
+                const mathAcc = Math.round((data.subject_accuracy.mathematics || 0) * 100);
+
+                const ctxSubject = document.getElementById('subjectChart').getContext('2d');
+                if (subjectChartInstance) subjectChartInstance.destroy();
+                subjectChartInstance = new Chart(ctxSubject, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Physics', 'Chemistry', 'Mathematics'],
+                        datasets: [{
+                            label: 'Accuracy (%)',
+                            data: [physAcc, chemAcc, mathAcc],
+                            backgroundColor: ['rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(244, 63, 94, 0.8)'],
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+
+                // ── Mock Test History Chart ──
+                const ctxHistory = document.getElementById('historyChart').getContext('2d');
+                if (historyChartInstance) historyChartInstance.destroy();
+
+                const historyLabels = data.recent_mock_tests.slice().reverse().map((_, i) => `Test ${i + 1}`);
+                const historyData = data.recent_mock_tests.slice().reverse().map(m => m.score);
+
+                historyChartInstance = new Chart(ctxHistory, {
+                    type: 'line',
+                    data: {
+                        labels: historyLabels.length ? historyLabels : ['No tests yet'],
+                        datasets: [{
+                            label: 'Total Score',
+                            data: historyData.length ? historyData : [0],
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#8b5cf6',
+                            pointRadius: historyData.length ? 5 : 0,
+                            pointHoverRadius: 7,
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, suggestedMax: 360 } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+
+                // ── Insights ──
+                const insightsContainer = document.getElementById('insights-container');
+                const insights = generateInsights(physAcc, chemAcc, mathAcc, data.total_attempts);
+                insightsContainer.innerHTML = insights.map(insight => `
+                    <div class="flex items-start space-x-3 p-3 bg-white/60 rounded-xl border border-brand-100/50">
+                        <span class="text-lg flex-shrink-0">${insight.icon}</span>
+                        <p class="text-sm text-brand-900 font-medium leading-relaxed">${insight.text}</p>
+                    </div>
+                `).join('');
+
+                // ── Weak Topics ──
+                const weakContainer = document.getElementById('weak-topics-container');
+                if (data.weak_chapters && data.weak_chapters.length > 0) {
+                    weakContainer.innerHTML = data.weak_chapters.map(t => `
+                        <div class="flex items-center p-3 bg-white/60 rounded-xl border border-amber-200/50 hover:bg-white transition-colors">
+                            <span class="text-amber-500 mr-3">⚠️</span>
+                            <span class="text-amber-900 font-semibold text-sm">${t.replace(/_/g, ' ')}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    weakContainer.innerHTML = `<p class="text-amber-700/80 italic text-sm p-2 font-medium">Not enough practice data yet. Keep practicing to identify weak topics!</p>`;
+                }
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('stats-cards').innerHTML = `<p class="text-rose-500 col-span-4 text-center font-semibold p-4 bg-rose-50 rounded-xl border border-rose-100">Failed to load dashboard data. Please try refreshing.</p>`;
+            } finally {
+                loading.classList.add('hidden');
+                content.classList.remove('hidden');
+            }
+        }
+
+        function generateInsights(physics, chemistry, maths, totalAttempts) {
+            const insights = [];
+            const subjects = [
+                { name: 'Physics', acc: physics },
+                { name: 'Chemistry', acc: chemistry },
+                { name: 'Mathematics', acc: maths }
+            ];
+
+            // Sort by accuracy descending
+            subjects.sort((a, b) => b.acc - a.acc);
+
+            if (totalAttempts === 0) {
+                insights.push({ icon: '📝', text: 'Start practicing to see your performance insights here!' });
+                return insights;
+            }
+
+            // Strong subject
+            if (subjects[0].acc >= 60) {
+                insights.push({ icon: '💪', text: `You are strong in <strong>${subjects[0].name}</strong> with ${subjects[0].acc}% accuracy. Keep it up!` });
+            }
+
+            // Medium subject
+            if (subjects[1].acc >= 40 && subjects[1].acc < 80) {
+                insights.push({ icon: '📊', text: `<strong>${subjects[1].name}</strong> performance is average at ${subjects[1].acc}%. Focus on weak chapters.` });
+            }
+
+            // Weak subject
+            if (subjects[2].acc < 60) {
+                insights.push({ icon: '🎯', text: `<strong>${subjects[2].name}</strong> requires improvement — currently at ${subjects[2].acc}%. Extra focus recommended.` });
+            }
+
+            // Overall
+            const overall = Math.round((physics + chemistry + maths) / 3);
+            if (overall >= 75) {
+                insights.push({ icon: '🌟', text: `Excellent overall performance at ${overall}%! You're on track for a great score.` });
+            } else if (overall >= 50) {
+                insights.push({ icon: '📈', text: `Overall accuracy is ${overall}%. Good progress — consistent practice will push you higher.` });
+            } else {
+                insights.push({ icon: '💡', text: `Overall accuracy is ${overall}%. Focus on understanding core concepts and practice daily.` });
+            }
+
+            return insights;
+        }
+
+        // ═══ INIT ═══
+        loadDashboard();
+    </script>
+
+</body>
+
+</html>
